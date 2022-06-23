@@ -1,15 +1,13 @@
-import { useState, useEffect } from "react";
+import {useState, useEffect, useRef} from "react";
 import Link from "next/link";
 import axios from "axios";
 import styled from "styled-components";
 
 const Nav = styled.nav`
   min-width: 300px;
-  overflow: hidden;
   border: 1px solid #b0b0b0;
   border-bottom: none;
-  padding: 10px 0 0 0px;
-  z-index: 10;
+  z-index: 50;
 
   @media screen and (max-width: 1450px) {
     display: none;
@@ -17,15 +15,14 @@ const Nav = styled.nav`
 `;
 const NavWrap = styled.div`
   position: fixed;
+  overflow: scroll;
   min-width: 300px;
-
-  @media screen and (max-width: 1450px) {
-    display: none;
-  }
+  height: 130%;
+  background-color: white;
 `;
 const Items = styled.div`
   max-width: 300px;
-  padding: 15px 5px 15px 5px;
+  padding: 30px 5px 15px 5px;
   display: flex;
   align-item: center;
   &:hover {
@@ -46,7 +43,7 @@ const Name = styled.button`
   text-align: left;
 `;
 
-export default function SideBar() {
+export default function SideBar({refData}) {
   const [movieData, setMovieData] = useState([]);
 
   useEffect(() => {
@@ -61,12 +58,12 @@ export default function SideBar() {
 
   if (movieData.length === 0) return <h1>loading...</h1>;
   return (
-    <Nav>
+    <Nav ref={refData}>
       <NavWrap>
-        {movieData.map((data, index) => (
-          <Link key={index} href={`/movie/${data.id}`}>
+        {movieData.map((md, index) => (
+          <Link key={index} href={`/movie/${md.id}`}>
             <Items>
-              <Name>{data.original_title}</Name>
+              <Name>{md.original_title}</Name>
             </Items>
           </Link>
         ))}

@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
+import {useRecoilState, useRecoilValue} from 'recoil';
 import Link from "next/link";
 import axios from "axios";
 import styled from "styled-components";
+import {movies, movieList} from './_app';
 
 const Index = styled.section`
   min-width: calc(100% - 300px); /* 300px은 nav */
-  padding: 30px 0 0 10px;
+  padding-top: 30px;
   z-index: 20;
 `;
 const MovieWrap = styled.div`
@@ -76,6 +78,9 @@ const MovieDate = styled.p`
 
 export default function Home() {
   const [movieData, setMovieData] = useState([]);
+  const [movie, setMovie] = useRecoilState(movies);
+
+  const getMovieList = useRecoilValue(movieList);
 
   useEffect(() => {
     axios
@@ -84,14 +89,19 @@ export default function Home() {
       )
       .then((res) => {
         setMovieData(res.data.results);
+        setMovie(res.data.results);
       });
   }, []);
+
+  useEffect(() => {
+    console.log('recoil ::', movie);
+  }, [movie]);
 
   if (movieData.length === 0) return <h1>loading...</h1>;
   return (
     <Index>
       <MovieWrap>
-        {movieData.map((md) => (
+        {getMovieList.map((md) => (
           <Link key={md.id} href={`/movie/${md.id}`}>
             <Movie>
               <MovieImage

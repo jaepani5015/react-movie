@@ -1,3 +1,5 @@
+import { useRef } from "react";
+import { atom, selector, RecoilRoot } from "recoil";
 import Headers from "../components/Headers";
 import SideBar from "../components/SideBar";
 import "../styles/globals.css";
@@ -11,16 +13,27 @@ const Wrap = styled.main`
   display: flex;
 `;
 
-function MyApp({ Component, pageProps }) {
+export default function MyApp({ Component, pageProps }) {
+  const navMenu = useRef();
   return (
-    <div>
-      <Headers />
-      <Wrap>
-        <SideBar />
-        <Component {...pageProps} />
-      </Wrap>
-    </div>
+    <RecoilRoot>
+        <Headers refData={navMenu}/>
+        <Wrap>
+            <SideBar refData={navMenu} />
+            <Component {...pageProps} />
+        </Wrap>
+    </RecoilRoot>
   );
 }
 
-export default MyApp;
+export const movies = atom({
+  key: 'movies',
+  default: []
+})
+
+export const movieList = selector({
+  key: 'movieList',
+  get: ({get}) => {
+    return get(movies);
+  }
+})

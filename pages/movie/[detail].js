@@ -49,11 +49,12 @@ const TitleWrap = styled.div`
   height: 20%;
   // background-color: orange;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  padding-left: 15px;
 `;
 const Title = styled.h1`
-  font-size: 7vw;
+  font-size: 1.6rem;
   font-weight: 800;
 `;
 const DescWrap = styled.div`
@@ -64,12 +65,14 @@ const DescWrap = styled.div`
 `;
 const DescTitle = styled.h2`
   text-align: left;
-  font-size: 5vw;
+  font-size: 1.3rem;
   font-weight: 600;
   padding-bottom: 10px;
 `;
 const DescInfo = styled.p`
   margin: 10px 0;
+  line-height: 2;
+  
 `;
 const DescTime = styled(DescInfo)`
   text-align: right;
@@ -86,14 +89,15 @@ export default function MovieDetail() {
   const isRef = createRef();
 
   useEffect(() => {
+    console.log(router.query.detail);
     axios
       .get(
-        "https://api.themoviedb.org/3/movie/634649?api_key=9b3c0beaa11b2e25a89860c9a931a958&language=en-US"
+        `https://api.themoviedb.org/3/movie/${router.query.detail}?api_key=9b3c0beaa11b2e25a89860c9a931a958&language=en-US`
       )
       .then((res) => {
         setDetailData(res.data);
       });
-  }, []);
+  }, [router.query.detail]);
 
   return (
     <DetailWrap>
