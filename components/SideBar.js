@@ -1,7 +1,7 @@
-import {useState, useEffect, useRef} from "react";
 import Link from "next/link";
-import axios from "axios";
 import styled from "styled-components";
+import { useRecoilValue } from 'recoil';
+import { movieList } from '../pages/_app';
 
 const Nav = styled.nav`
   min-width: 300px;
@@ -44,23 +44,14 @@ const Name = styled.button`
 `;
 
 export default function SideBar({refData}) {
-  const [movieData, setMovieData] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get(
-        "https://api.themoviedb.org/4/list/1?page=1&api_key=9b3c0beaa11b2e25a89860c9a931a958"
-      )
-      .then((res) => {
-        setMovieData(res.data.results);
-      });
-  }, []);
+  const getMovieList = useRecoilValue(movieList);
 
-  if (movieData.length === 0) return <h1>loading...</h1>;
+  if (getMovieList.length === 0) return <h1>loading...</h1>;
   return (
     <Nav ref={refData}>
       <NavWrap>
-        {movieData.map((md, index) => (
+        {getMovieList.map((md, index) => (
           <Link key={index} href={`/movie/${md.id}`}>
             <Items>
               <Name>{md.original_title}</Name>

@@ -1,10 +1,11 @@
-import { useRef } from "react";
-import { atom, selector, RecoilRoot } from "recoil";
+import {useRef} from "react";
 import Headers from "../components/Headers";
 import SideBar from "../components/SideBar";
 import "../styles/globals.css";
 
 import styled from "styled-components";
+import {QueryClient, QueryClientProvider} from "react-query";
+import {ReactQueryDevtools} from 'react-query/devtools';
 
 const Wrap = styled.main`
   width: 100%;
@@ -13,27 +14,17 @@ const Wrap = styled.main`
   display: flex;
 `;
 
-export default function MyApp({ Component, pageProps }) {
-  const navMenu = useRef();
-  return (
-    <RecoilRoot>
+const queryClient = new QueryClient();
+
+export default function MyApp({Component, pageProps}) {
+    const navMenu = useRef();
+
+    return (<QueryClientProvider client={queryClient}>
         <Headers refData={navMenu}/>
         <Wrap>
-            <SideBar refData={navMenu} />
+            {/* <SideBar refData={navMenu} /> */}
             <Component {...pageProps} />
         </Wrap>
-    </RecoilRoot>
-  );
+        <ReactQueryDevtools initialIsOpen="true"/>
+    </QueryClientProvider>);
 }
-
-export const movies = atom({
-  key: 'movies',
-  default: []
-})
-
-export const movieList = selector({
-  key: 'movieList',
-  get: ({get}) => {
-    return get(movies);
-  }
-})
